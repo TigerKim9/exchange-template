@@ -1,13 +1,16 @@
-# Backend
-backend/target/
-backend/.mvn/
-backend/mvnw
-backend/mvnw.cmd
+# Backend (Gradle)
+backend/build/
+backend/.gradle/
+backend/gradle/
+backend/gradlew
+backend/gradlew.bat
 backend/.settings/
 backend/.classpath
 backend/.project
 backend/.idea/
 backend/*.iml
+backend/out/
+backend/bin/
 
 # Frontend
 frontend/node_modules/

@@ -35,7 +35,7 @@
 - Spring Data JPA
 - PostgreSQL
 - WebSocket (STOMP)
-- Maven
+- Gradle 8.5
 
 ### 프론트엔드
 - React 18
@@ -90,7 +90,7 @@ cd backend/src/main/resources
 3. 백엔드 실행
 ```bash
 cd backend
-mvn spring-boot:run
+./gradlew bootRun
 ```
 
 #### 프론트엔드 설정
