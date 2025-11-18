@@ -2,6 +2,12 @@
 
 풀 스택 암호화폐 거래소 플랫폼 템플릿입니다. Spring Boot, PostgreSQL, React로 구축되었습니다.
 
+## 📚 문서
+
+- **[API 문서](docs/API.md)** - 전체 REST API 엔드포인트 및 사용 예시
+- **[배포 가이드](docs/DEPLOYMENT.md)** - HTTPS 설정 및 프로덕션 배포 방법
+- **[보안 가이드](docs/SECURITY.md)** - 보안 설정 및 체크리스트
+
 ## 주요 기능
 
 ### 백엔드 (Spring Boot)
@@ -113,32 +119,31 @@ http://localhost:3000
 
 ## API 엔드포인트
 
-### 인증
+**Base URL:** `http://localhost:8080` (개발) / `https://your-domain.com` (프로덕션)
+
+전체 API 문서는 **[API.md](docs/API.md)**를 참조하세요.
+
+### 주요 엔드포인트
+
+**인증 (인증 불필요)**
 - `POST /api/auth/login` - 로그인
 - `POST /api/auth/register` - 회원가입
 
-### 지갑
-- `GET /api/wallets` - 사용자 지갑 목록
-- `GET /api/wallets/{currency}` - 특정 통화 지갑 조회
-- `POST /api/wallets/create/{currency}` - 지갑 생성
+**지갑 (인증 필요)**
+- `GET /api/wallets` - 지갑 목록
 - `POST /api/wallets/deposit` - 입금
 - `POST /api/wallets/withdraw` - 출금
 
-### 거래
+**거래 (인증 필요)**
 - `GET /api/trading/pairs` - 거래 쌍 목록
 - `POST /api/trading/orders` - 주문 생성
-- `GET /api/trading/orders` - 사용자 주문 목록
 - `DELETE /api/trading/orders/{id}` - 주문 취소
 
-### 거래 내역
-- `GET /api/transactions` - 거래 내역 조회
-- `GET /api/transactions/paged` - 페이징된 거래 내역
-
-### 관리자
-- `GET /api/admin/users` - 전체 사용자 목록
+**관리자 (ADMIN 역할 필요)**
 - `GET /api/admin/stats` - 시스템 통계
 - `PUT /api/admin/users/{id}/enable` - 사용자 활성화
-- `PUT /api/admin/users/{id}/disable` - 사용자 비활성화
+
+> 📖 **상세 문서:** [API.md](docs/API.md)에서 요청/응답 예시 및 전체 엔드포인트 확인
 
 ## 데이터베이스 스키마
 
@@ -151,21 +156,20 @@ http://localhost:3000
 
 ## 보안 설정
 
-### JWT 시크릿 키 변경
-프로덕션 환경에서는 반드시 JWT 시크릿 키를 변경하세요:
+⚠️ **프로덕션 배포 전 필수 확인사항**
 
-```properties
-# backend/src/main/resources/application.properties
-jwt.secret=your-secure-secret-key-here-min-256-bits
+### 즉시 변경 필요
+1. **JWT 시크릿 키** - 256비트 이상 랜덤 키로 변경
+2. **DB 비밀번호** - 강력한 비밀번호로 변경
+3. **CORS 설정** - 프로덕션 도메인으로 제한
+
+```bash
+# 안전한 JWT 시크릿 생성
+openssl rand -base64 64
 ```
 
-### CORS 설정
-프로덕션 도메인으로 CORS 설정을 업데이트하세요:
-
-```properties
-# backend/src/main/resources/application.properties
-cors.allowed.origins=https://your-production-domain.com
-```
+> 🔒 **전체 보안 가이드:** [SECURITY.md](docs/SECURITY.md) 참조
+> 🚀 **프로덕션 배포:** [DEPLOYMENT.md](docs/DEPLOYMENT.md) 참조
 
 ## 개발 로드맵
 
@@ -180,12 +184,30 @@ cors.allowed.origins=https://your-production-domain.com
 
 ## 프로덕션 배포
 
-1. 환경 변수 설정
-2. JWT 시크릿 키 변경
-3. HTTPS 설정
-4. 데이터베이스 백업 설정
-5. 로그 모니터링 설정
-6. 리버스 프록시 설정 (Nginx)
+상세한 배포 가이드는 **[DEPLOYMENT.md](docs/DEPLOYMENT.md)**를 참조하세요.
+
+**빠른 시작:**
+```bash
+# 1. 환경 변수 설정
+cp .env.example .env.prod
+nano .env.prod  # JWT 시크릿, DB 비밀번호 변경
+
+# 2. HTTPS 인증서 발급 (Let's Encrypt)
+sudo certbot certonly --standalone -d your-domain.com
+
+# 3. Docker Compose로 실행
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+**필수 체크리스트:**
+- [ ] JWT 시크릿 키 변경
+- [ ] DB 비밀번호 변경
+- [ ] HTTPS 설정 완료
+- [ ] 방화벽 설정 (포트 80, 443)
+- [ ] 자동 백업 설정
+- [ ] Nginx 리버스 프록시 설정
+
+> 📘 **상세 가이드:** [DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 ## 라이선스
 
